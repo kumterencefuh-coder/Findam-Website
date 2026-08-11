@@ -10,7 +10,7 @@ const money = (value) => `${new Intl.NumberFormat('en-US', { maximumFractionDigi
 function Logo() {
   return <img src={fullLogo} alt="Findam — Expertise you can trust, results you'll love" className="brand-logo" style={{ maxWidth: '200px', height: 'auto' }} />
 }
-
+ // redeploy
 function FooterLogo() {
   return <span className="logo-mark"><img src={iconMark} alt="" className="logo-icon" />Findam</span>
 }
