@@ -26,7 +26,7 @@
 .whatsapp:hover{transform:translateY(-3px);box-shadow:0 18px 34px rgba(127,72,18,0.22),0 0 0 1px rgba(255,255,255,0.3),0 0 0 9px rgba(255,143,36,0.08)}
 .whatsapp .floating-bot{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#fffaf3 0%, #fefdf7 40%, #effae8 100%);color:#171717;font-size:14px;box-shadow:inset 0 0 0 2px rgba(255,145,58,0.12),0 0 0 4px rgba(255,143,36,0.08),0 7px 16px rgba(106,58,10,0.11);justify-items:center;align-items:center;line-height:1;flex-shrink:0}
 .whatsapp span{font-size:8.8px;font-weight:700;color:#171717;text-shadow:none;font-family:'Space Grotesk','DM Sans',Arial,sans-serif;letter-spacing:-.03em;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.04;max-width:58px;padding:0}
-.bot-panel{position:absolute;right:0;bottom:74px;width:min(380px,calc(100vw - 28px));overflow:hidden;border-radius:14px;background:linear-gradient(180deg,#ffffff,var(--bot-bg));box-shadow:0 30px 60px rgba(7,18,21,0.25);border:1px solid rgba(0,0,0,0.04)}
+.bot-panel{position:absolute;right:0;bottom:74px;width:min(380px,calc(100vw - 28px));overflow:hidden;border-radius:14px;background-image:linear-gradient(rgba(255,255,255,.9),rgba(251,253,251,.96)),url('/Findam%20pic.jpeg');background-size:cover;background-position:center;box-shadow:0 30px 60px rgba(7,18,21,0.25);border:1px solid rgba(0,0,0,0.04)}
 .bot-panel header{display:flex;align-items:center;gap:12px;padding:14px;background:linear-gradient(90deg,#ff9d3f 0%, #ff7119 42%, #cce9ab 100%);color:#fff}
 .bot-panel header>span{font-size:20px;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,0.95);color:var(--orange);font-weight:700}
 .bot-panel header div{display:flex;flex-direction:column}
@@ -59,6 +59,10 @@
 .contact-pill:hover{transform:translateY(-3px)}
 
 @media(max-width:580px){.filters{grid-template-columns:1fr}.property-form .photo-upload,.photo-previews{grid-column:auto}.photo-previews{grid-template-columns:repeat(2,1fr)}}
+
+/* Keep the logo's oversized white source canvas from extending below the header. */
+.brand-logo{width:200px!important;height:42px!important;object-fit:cover;object-position:center 52%}
+@media(max-width:580px){.brand-logo{width:150px!important;height:34px!important}}
 
 /* Conversational bot and direct contact details */
 .bot-logo,.floating-bot{display:grid;place-items:center;border-radius:50%;background:#fff;color:#25d366}.bot-logo{width:31px;height:31px;font-size:17px}.floating-bot{width:31px;height:31px;font-size:18px}.bot-chat{display:flex;flex-direction:column;gap:8px;max-height:240px;min-height:128px;overflow:auto}.bot-chat p{margin:0}.bot-chat .user{align-self:flex-end;border-radius:8px 8px 0 8px;background:#dcf8e5;color:#284336}.bot-input{display:flex;gap:8px;padding:10px;border-top:1px solid #eee}.bot-input input{flex:1;min-width:0;padding:9px 11px;border:1px solid #ddd;border-radius:18px;outline:none;font-size:12px}.bot-input input:focus{border-color:#25d366}.bot-input button{width:34px;height:34px;border:0;border-radius:50%;background:#25d366;color:#fff}.bot-contact{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:12px;border-top:1px solid #eee;background:#fafafa}.bot-contact b{grid-column:span 2;color:#444;font-size:11px}.bot-contact a{color:#267c48;font-size:11px;text-decoration:none}.whatsapp{min-width:51px}.whatsapp>span:last-child{font-size:12px;font-weight:700}
