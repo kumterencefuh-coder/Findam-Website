@@ -2,7 +2,9 @@ const API_URL = import.meta.env.VITE_API_URL || '/api'
 
 async function request(path, options = {}) {
   const response = await fetch(`${API_URL}${path}`, { headers: { 'Content-Type': 'application/json', ...(options.headers || {}) }, ...options })
-  const payload = await response.json()
+  const text = await response.text()
+  let payload
+  try { payload = text ? JSON.parse(text) : {} } catch { throw new Error(`Backend is not connected at ${API_URL}. Set VITE_API_URL to your backend URL.`) }
   if (!response.ok) throw new Error(payload.error || 'Request failed')
   return payload
 }

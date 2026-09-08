@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { cities } from './data.js'
+import { cities, listings as sampleListings } from './data.js'
 import { getFavorites, getListings, removeFavorite, saveFavorite, sendBotMessage, submitProperty } from './api.js'
 import CreateListing from './components/CreateListing.jsx'
 import Admin from './components/Admin.jsx'
@@ -50,7 +50,7 @@ function App() {
   const [loading, setLoading] = useState(true)
   const visitorId = useMemo(() => { const key = 'findam-visitor-id'; let value = localStorage.getItem(key); if (!value) { value = crypto.randomUUID(); localStorage.setItem(key, value) } return value }, [])
   const [menuOpen, setMenuOpen] = useState(false)
-  useEffect(() => { Promise.all([getListings(), getFavorites(visitorId)]).then(([items, saved]) => { setListings(items); setSavedIds(saved.map((item) => item.id)) }).catch(console.error).finally(() => setLoading(false)) }, [visitorId])
+  useEffect(() => { Promise.all([getListings().catch(() => sampleListings), getFavorites(visitorId).catch(() => [])]).then(([items, saved]) => { setListings(items); setSavedIds(saved.map((item) => item.id)) }).finally(() => setLoading(false)) }, [visitorId])
   const results = useMemo(() => listings.filter((listing) => (!city || listing.city === city) && (!type || listing.type === type) && (!maxPrice || listing.price <= Number(maxPrice) * 1000) && `${listing.title} ${listing.city} ${listing.neighbourhood}`.toLowerCase().includes(query.toLowerCase())), [listings, city, type, query, maxPrice])
   const go = (next) => { setPage(next); setSelected(null); setMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }) }
   const showListing = (listing) => { setSelected(listing); go('detail') }
