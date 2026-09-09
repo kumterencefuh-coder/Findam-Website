@@ -1,4 +1,6 @@
-const API_URL = 'https://findam-backend.onrender.com/api'
+// Use the same-origin proxy locally/with Docker, and configure the deployed
+// frontend with VITE_API_URL when the API lives on another host.
+const API_URL = (import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '')
 
 async function request(path, options = {}) {
   const response = await fetch(`${API_URL}${path}`, { headers: { 'Content-Type': 'application/json', ...(options.headers || {}) }, ...options })
