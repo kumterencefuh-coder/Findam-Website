@@ -33,8 +33,8 @@ function ListingCard({ listing, onOpen, saved, onSave }) {
 
 function SearchFields({ city, setCity, type, setType }) {
   return <>
-    <label><span>Where are you looking?</span><select value={city} onChange={(e) => setCity(e.target.value)}><option value="">Any city</option>{cities.map((item) => <option key={item}>{item}</option>)}</select></label>
-    <label><span>Property type</span><select value={type} onChange={(e) => setType(e.target.value)}><option value="">Any</option><option>Rent</option><option>Guesthouse</option></select></label>
+    <label><span>Where are you looking?</span><select id="search-city" name="city" value={city} onChange={(e) => setCity(e.target.value)}><option value="">Any city</option>{cities.map((item) => <option key={item}>{item}</option>)}</select></label>
+    <label><span>Property type</span><select id="search-type" name="type" value={type} onChange={(e) => setType(e.target.value)}><option value="">Any</option><option>Rent</option><option>Guesthouse</option></select></label>
   </>
 }
 

@@ -1,4 +1,4 @@
-const API_URL = 'https://findam-backend.onrender.com'
+const API_URL = 'https://findam-backend.onrender.com/api'
 
 async function request(path, options = {}) {
   const response = await fetch(`${API_URL}${path}`, { headers: { 'Content-Type': 'application/json', ...(options.headers || {}) }, ...options })
