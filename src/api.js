@@ -1,6 +1,8 @@
-// Use the same-origin proxy locally/with Docker, and configure the deployed
-// frontend with VITE_API_URL when the API lives on another host.
-const API_URL = (import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '')
+// Use the Vite/Docker same-origin proxy locally. Vercel does not proxy /api
+// unless a rewrite is configured, so use the deployed API as the production
+// fallback. VITE_API_URL can still override this for another environment.
+const defaultApiUrl = import.meta.env.DEV ? '/api' : 'https://findam-backend.onrender.com/api'
+const API_URL = (import.meta.env.VITE_API_URL || defaultApiUrl).replace(/\/$/, '')
 
 async function request(path, options = {}) {
   const response = await fetch(`${API_URL}${path}`, { headers: { 'Content-Type': 'application/json', ...(options.headers || {}) }, ...options })
