@@ -18,13 +18,16 @@ export function getListings(filters = {}) {
   return request(`/listings${params.toString() ? `?${params}` : ''}`).then((result) => result.data)
 }
 
-export function submitProperty(property) { return request('/listings', { method: 'POST', body: JSON.stringify(property) }) }
+export function submitProperty(property, token) { return request('/listings', { method: 'POST', headers: token ? { Authorization: `Bearer ${token}` } : {}, body: JSON.stringify(property) }) }
 export function sendBotMessage(message) { return request('/bot', { method: 'POST', body: JSON.stringify({ message }) }) }
 export function saveFavorite(listingId, visitorId) { return request(`/favorites/${listingId}`, { method: 'POST', body: JSON.stringify({ visitorId }) }) }
 export function removeFavorite(listingId, visitorId) { return request(`/favorites/${listingId}?visitorId=${encodeURIComponent(visitorId)}`, { method: 'DELETE' }) }
 export function getFavorites(visitorId) { return request(`/favorites?visitorId=${encodeURIComponent(visitorId)}`).then((result) => result.data) }
 export function registerAccount(account) { return request('/auth/register', { method: 'POST', body: JSON.stringify(account) }) }
 export function loginAccount(account) { return request('/auth/login', { method: 'POST', body: JSON.stringify(account) }) }
+export function me(token) { return request('/auth/me', { headers: { Authorization: `Bearer ${token}` } }).then((result) => result.data) }
+export function resetPassword(account) { return request('/auth/reset', { method: 'POST', body: JSON.stringify(account) }) }
+export function getMyListings(token) { return request('/me/listings', { headers: { Authorization: `Bearer ${token}` } }).then((result) => result.data) }
 export function getAdminListings(token) { return request('/admin/listings', { headers: { 'X-Admin-Token': token } }).then((result) => result.data) }
 export function confirmListing(id, token) { return request(`/admin/listings/${id}/confirm`, { method: 'POST', headers: { 'X-Admin-Token': token } }) }
 export function updateListing(id, changes, token) { return request(`/listings/${id}`, { method: 'PUT', headers: { 'X-Admin-Token': token }, body: JSON.stringify(changes) }) }

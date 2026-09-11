@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { cities, listings as sampleListings } from './data.js'
 import { getFavorites, getListings, removeFavorite, saveFavorite, sendBotMessage, submitProperty } from './api.js'
+import Auth, { Dashboard } from './components/Auth.jsx'
 import CreateListing from './components/CreateListing.jsx'
 import Admin from './components/Admin.jsx'
 import iconMark from '../Findam Icon.jpg.jpeg'
@@ -50,6 +51,10 @@ function App() {
   const [loading, setLoading] = useState(true)
   const visitorId = useMemo(() => { const key = 'findam-visitor-id'; let value = localStorage.getItem(key); if (!value) { value = crypto.randomUUID(); localStorage.setItem(key, value) } return value }, [])
   const [menuOpen, setMenuOpen] = useState(false)
+  const [auth, setAuth] = useState(() => { try { return JSON.parse(localStorage.getItem('findam-auth') || 'null') } catch { return null } })
+  const [showAuth, setShowAuth] = useState(false)
+  const login = (result) => { const next = { token: result.token, user: result.data }; localStorage.setItem('findam-auth', JSON.stringify(next)); setAuth(next); setShowAuth(false); go('dashboard') }
+  const logout = () => { localStorage.removeItem('findam-auth'); setAuth(null); go('home') }
   useEffect(() => { Promise.all([getListings().catch(() => sampleListings), getFavorites(visitorId).catch(() => [])]).then(([items, saved]) => { setListings(items); setSavedIds(saved.map((item) => item.id)) }).finally(() => setLoading(false)) }, [visitorId])
   const results = useMemo(() => listings.filter((listing) => (!city || listing.city === city) && (!type || listing.type === type) && (!maxPrice || listing.price <= Number(maxPrice) * 1000) && `${listing.title} ${listing.city} ${listing.neighbourhood}`.toLowerCase().includes(query.toLowerCase())), [listings, city, type, query, maxPrice])
   const go = (next) => { setPage(next); setSelected(null); setMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }) }
@@ -64,18 +69,20 @@ function App() {
       <nav className={menuOpen ? 'open' : ''}>
         <button className={page === 'home' ? 'active' : ''} onClick={() => go('home')}>Home</button><button onClick={() => chooseType('Rent')}>Rent</button><button onClick={() => chooseType('Guesthouse')}>Guesthouse</button><button onClick={() => go('workflow')}>How it works</button>
       </nav>
-      <button className="primary compact" onClick={() => go('list')}>List Your Property</button><button className="account" onClick={() => go('saved')} aria-label="Saved properties">♥</button>
+      <button className="primary compact" onClick={() => auth ? go('list') : setShowAuth(true)}>List Your Property</button><button className="account" onClick={() => auth ? go('dashboard') : setShowAuth(true)} aria-label="Account">{auth ? (auth.user.name || 'Account') : 'Log in'}</button>
     </div></header>
     <main>
       {page === 'home' && <Home listings={listings} city={city} setCity={setCity} type={type} setType={setType} maxPrice={maxPrice} setMaxPrice={setMaxPrice} search={() => go('listings')} onOpen={showListing} savedIds={savedIds} onSave={toggleSaved} go={go} />}
       {page === 'listings' && (loading ? <section className="shell section"><p>Loading verified listings…</p></section> : <Listings results={results} city={city} setCity={setCity} type={type} setType={setType} maxPrice={maxPrice} setMaxPrice={setMaxPrice} query={query} setQuery={setQuery} onOpen={showListing} savedIds={savedIds} onSave={toggleSaved} />)}
       {page === 'detail' && <Detail listing={selected} back={() => go('listings')} />}
-      {page === 'list' && <section className="shell section"><div className="form-wrap"><p className="kicker">LANDLORD PORTAL</p><h1 className="page-title">List your property</h1><p className="lead">Submit your details and photos. A house finder visits first, then a civil engineer completes the verification before publishing.</p><CreateListing onCreate={async (property) => { await submitProperty(property); const refreshed = await getListings(); setListings(refreshed); go('listings') }} /></div></section>}
+      {page === 'list' && (auth ? <section className="shell section"><div className="form-wrap"><p className="kicker">LANDLORD PORTAL</p><h1 className="page-title">List your property</h1><p className="lead">Submit your details and photos. A house finder visits first, then a civil engineer completes the verification before publishing.</p><CreateListing onCreate={async (property) => { await submitProperty(property, auth.token); const refreshed = await getListings(); setListings(refreshed); go('listings') }} /></div></section> : <Auth onLogin={login} onClose={() => go('home')} />)}
       {page === 'workflow' && <Workflow go={go} />}
       {page === 'saved' && <Saved listings={listings.filter((listing) => savedIds.includes(listing.id))} onOpen={showListing} savedIds={savedIds} onSave={toggleSaved} go={go} />}
       {page === 'admin' && <Admin />}
+      {page === 'dashboard' && (auth ? <Dashboard user={auth.user} token={auth.token} onLogout={logout} go={go} /> : <Auth onLogin={login} onClose={() => go('home')} />)}
     </main>
     <HelpBot go={go} chooseType={chooseType} backgroundImage={beautifulHouse} />
+    {showAuth && <div className="auth-overlay"><Auth onLogin={login} onClose={() => setShowAuth(false)} /></div>}
     <footer><div className="shell footer"><div><FooterLogo /><p>Find verified properties. Move in with confidence.</p></div><div><b>Explore</b><button onClick={() => chooseType('Rent')}>Rent a home</button><button onClick={() => chooseType('Guesthouse')}>Find a guesthouse</button></div><div><b>Available cities</b>{cities.map((item) => <span key={item}>{item}</span>)}</div></div></footer>
   </>
 }
