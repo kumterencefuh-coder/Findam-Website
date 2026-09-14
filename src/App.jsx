@@ -53,7 +53,7 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [auth, setAuth] = useState(() => { try { return JSON.parse(localStorage.getItem('findam-auth') || 'null') } catch { return null } })
   const [showAuth, setShowAuth] = useState(false)
-  const login = (result) => { const next = { token: result.token, user: result.data }; localStorage.setItem('findam-auth', JSON.stringify(next)); setAuth(next); setShowAuth(false); go('dashboard') }
+  const login = (result) => { const next = { token: result.token, user: result.data }; localStorage.setItem('findam-auth', JSON.stringify(next)); setAuth(next); setShowAuth(false); go(result.data.role === 'admin' ? 'admin' : 'dashboard') }
   const logout = () => { localStorage.removeItem('findam-auth'); setAuth(null); go('home') }
   useEffect(() => { Promise.all([getListings().catch(() => sampleListings), getFavorites(visitorId).catch(() => [])]).then(([items, saved]) => { setListings(items); setSavedIds(saved.map((item) => item.id)) }).finally(() => setLoading(false)) }, [visitorId])
   const results = useMemo(() => listings.filter((listing) => (!city || listing.city === city) && (!type || listing.type === type) && (!maxPrice || listing.price <= Number(maxPrice) * 1000) && `${listing.title} ${listing.city} ${listing.neighbourhood}`.toLowerCase().includes(query.toLowerCase())), [listings, city, type, query, maxPrice])
@@ -78,7 +78,7 @@ function App() {
       {page === 'list' && (auth ? <section className="shell section"><div className="form-wrap"><p className="kicker">LANDLORD PORTAL</p><h1 className="page-title">List your property</h1><p className="lead">Submit your details and photos. A house finder visits first, then a civil engineer completes the verification before publishing.</p><CreateListing onCreate={async (property) => { await submitProperty(property, auth.token); const refreshed = await getListings(); setListings(refreshed); go('listings') }} /></div></section> : <Auth onLogin={login} onClose={() => go('home')} />)}
       {page === 'workflow' && <Workflow go={go} />}
       {page === 'saved' && <Saved listings={listings.filter((listing) => savedIds.includes(listing.id))} onOpen={showListing} savedIds={savedIds} onSave={toggleSaved} go={go} />}
-      {page === 'admin' && <Admin />}
+      {page === 'admin' && <Admin session={auth} />}
       {page === 'dashboard' && (auth ? <Dashboard user={auth.user} token={auth.token} onLogout={logout} go={go} /> : <Auth onLogin={login} onClose={() => go('home')} />)}
     </main>
     <HelpBot go={go} chooseType={chooseType} backgroundImage={beautifulHouse} />

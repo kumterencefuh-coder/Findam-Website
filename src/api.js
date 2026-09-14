@@ -28,7 +28,9 @@ export function loginAccount(account) { return request('/auth/login', { method: 
 export function me(token) { return request('/auth/me', { headers: { Authorization: `Bearer ${token}` } }).then((result) => result.data) }
 export function resetPassword(account) { return request('/auth/reset', { method: 'POST', body: JSON.stringify(account) }) }
 export function getMyListings(token) { return request('/me/listings', { headers: { Authorization: `Bearer ${token}` } }).then((result) => result.data) }
-export function getAdminListings(token) { return request('/admin/listings', { headers: { 'X-Admin-Token': token } }).then((result) => result.data) }
-export function confirmListing(id, token) { return request(`/admin/listings/${id}/confirm`, { method: 'POST', headers: { 'X-Admin-Token': token } }) }
+function adminHeaders(token) { return { 'X-Admin-Token': token, Authorization: `Bearer ${token}` } }
+export function getAdminListings(token) { return request('/admin/listings', { headers: adminHeaders(token) }).then((result) => result.data) }
+export function confirmListing(id, token) { return request(`/admin/listings/${id}/confirm`, { method: 'POST', headers: adminHeaders(token) }) }
+export function rejectListing(id, token) { return request(`/admin/listings/${id}/reject`, { method: 'POST', headers: adminHeaders(token) }) }
 export function updateListing(id, changes, token) { return request(`/listings/${id}`, { method: 'PUT', headers: { 'X-Admin-Token': token }, body: JSON.stringify(changes) }) }
 export function deleteListing(id, token) { return request(`/listings/${id}`, { method: 'DELETE', headers: { 'X-Admin-Token': token } }) }
