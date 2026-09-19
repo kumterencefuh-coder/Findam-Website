@@ -30,6 +30,8 @@ export function resetPassword(account) { return request('/auth/reset', { method:
 export function getMyListings(token) { return request('/me/listings', { headers: { Authorization: `Bearer ${token}` } }).then((result) => result.data) }
 function adminHeaders(token) { return { 'X-Admin-Token': token, Authorization: `Bearer ${token}` } }
 export function getAdminListings(token) { return request('/admin/listings', { headers: adminHeaders(token) }).then((result) => result.data) }
+export function getAdminUsers(token) { return request('/admin/users', { headers: { Authorization: `Bearer ${token}` } }).then((result) => result.data) }
+export function promoteUser(id, token) { return request(`/admin/users/${id}/promote`, { method: 'POST', headers: { Authorization: `Bearer ${token}` } }).then((result) => result.data) }
 export function confirmListing(id, token) { return request(`/admin/listings/${id}/confirm`, { method: 'POST', headers: adminHeaders(token) }) }
 export function rejectListing(id, token) { return request(`/admin/listings/${id}/reject`, { method: 'POST', headers: adminHeaders(token) }) }
 export function updateListing(id, changes, token) { return request(`/listings/${id}`, { method: 'PUT', headers: { 'X-Admin-Token': token }, body: JSON.stringify(changes) }) }

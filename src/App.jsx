@@ -53,7 +53,7 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [auth, setAuth] = useState(() => { try { return JSON.parse(localStorage.getItem('findam-auth') || 'null') } catch { return null } })
   const [showAuth, setShowAuth] = useState(false)
-  const login = (result) => { const next = { token: result.token, user: result.data }; localStorage.setItem('findam-auth', JSON.stringify(next)); setAuth(next); setShowAuth(false); go(result.data.role === 'admin' ? 'admin' : 'dashboard') }
+  const login = (result) => { const next = { token: result.token, user: result.data }; localStorage.setItem('findam-auth', JSON.stringify(next)); setAuth(next); setShowAuth(false); go(['admin', 'root_admin'].includes(result.data.role) ? 'admin' : 'dashboard') }
   const logout = () => { localStorage.removeItem('findam-auth'); setAuth(null); go('home') }
   useEffect(() => { Promise.all([getListings().catch(() => sampleListings), getFavorites(visitorId).catch(() => [])]).then(([items, saved]) => { setListings(items); setSavedIds(saved.map((item) => item.id)) }).finally(() => setLoading(false)) }, [visitorId])
   const results = useMemo(() => listings.filter((listing) => (!city || listing.city === city) && (!type || listing.type === type) && (!maxPrice || listing.price <= Number(maxPrice) * 1000) && `${listing.title} ${listing.city} ${listing.neighbourhood}`.toLowerCase().includes(query.toLowerCase())), [listings, city, type, query, maxPrice])
