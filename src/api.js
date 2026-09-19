@@ -27,12 +27,16 @@ export function registerAccount(account) { return request('/auth/register', { me
 export function loginAccount(account) { return request('/auth/login', { method: 'POST', body: JSON.stringify(account) }) }
 export function me(token) { return request('/auth/me', { headers: { Authorization: `Bearer ${token}` } }).then((result) => result.data) }
 export function resetPassword(account) { return request('/auth/reset', { method: 'POST', body: JSON.stringify(account) }) }
+export function getInquiries(token) { return request('/inquiries', { headers: { Authorization: `Bearer ${token}` } }).then((result) => result.data) }
+export function sendInquiry(listingId, message, token) { return request('/inquiries', { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: JSON.stringify({ listingId, message }) }).then((result) => result.data) }
+export function replyToInquiry(id, message, token) { return request(`/inquiries/${id}/reply`, { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: JSON.stringify({ message }) }).then((result) => result.data) }
 export function getMyListings(token) { return request('/me/listings', { headers: { Authorization: `Bearer ${token}` } }).then((result) => result.data) }
 function adminHeaders(token) { return { 'X-Admin-Token': token, Authorization: `Bearer ${token}` } }
 export function getAdminListings(token) { return request('/admin/listings', { headers: adminHeaders(token) }).then((result) => result.data) }
 export function getAdminUsers(token) { return request('/admin/users', { headers: { Authorization: `Bearer ${token}` } }).then((result) => result.data) }
 export function promoteUser(id, token) { return request(`/admin/users/${id}/promote`, { method: 'POST', headers: { Authorization: `Bearer ${token}` } }).then((result) => result.data) }
 export function confirmListing(id, token) { return request(`/admin/listings/${id}/confirm`, { method: 'POST', headers: adminHeaders(token) }) }
-export function rejectListing(id, token) { return request(`/admin/listings/${id}/reject`, { method: 'POST', headers: adminHeaders(token) }) }
+export function rejectListing(id, reason, token) { return request(`/admin/listings/${id}/reject`, { method: 'POST', headers: adminHeaders(token), body: JSON.stringify({ reason }) }) }
+export function requestListingInfo(id, reason, token) { return request(`/admin/listings/${id}/needs-info`, { method: 'POST', headers: adminHeaders(token), body: JSON.stringify({ reason }) }) }
 export function updateListing(id, changes, token) { return request(`/listings/${id}`, { method: 'PUT', headers: { 'X-Admin-Token': token }, body: JSON.stringify(changes) }) }
 export function deleteListing(id, token) { return request(`/listings/${id}`, { method: 'DELETE', headers: { 'X-Admin-Token': token } }) }
