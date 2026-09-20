@@ -5,7 +5,8 @@ const defaultApiUrl = import.meta.env.DEV ? '/api' : 'https://findam-backend.onr
 const API_URL = (import.meta.env.VITE_API_URL || defaultApiUrl).replace(/\/$/, '')
 
 async function request(path, options = {}) {
-  const response = await fetch(`${API_URL}${path}`, { headers: { 'Content-Type': 'application/json', ...(options.headers || {}) }, ...options })
+  let response
+  try { response = await fetch(`${API_URL}${path}`, { headers: { 'Content-Type': 'application/json', ...(options.headers || {}) }, ...options }) } catch { throw new Error(`Cannot reach Findam server at ${API_URL}. Check the deployed backend URL and internet connection.`) }
   const text = await response.text()
   let payload
   try { payload = text ? JSON.parse(text) : {} } catch { throw new Error(`Backend is not connected at ${API_URL}. Set VITE_API_URL to your backend URL.`) }
