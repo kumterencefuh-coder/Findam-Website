@@ -104,14 +104,14 @@ html,body,#root{max-width:100%;overflow-x:hidden}.nav{min-width:0;gap:12px}.bran
 /* Mobile header: keep the brand, menu and login control visible together. */
 @media(max-width:580px){
   .nav{display:flex;align-items:center;gap:8px}
-  .brand{flex:0 1 auto;min-width:0;max-width:132px;align-items:center;height:100%;padding-top:3px}
-  .brand-logo{width:126px!important;height:40px!important;object-fit:cover!important;object-position:center 52%!important;transform:translateY(3px)}
+  .brand{flex:0 1 auto;min-width:0;max-width:132px;align-items:center;height:100%;padding-top:6px}
+  .brand-logo{width:126px!important;height:40px!important;object-fit:cover!important;object-position:center 52%!important;transform:translateY(6px)}
   .menu{display:block;flex:0 0 34px;width:34px;height:38px;padding:0;font-size:24px;line-height:1}
   .account{flex:0 0 66px;width:66px!important;min-width:66px!important;height:34px}
 }
 @media(max-width:360px){
-  .brand{max-width:116px;padding-top:2px}
-  .brand-logo{width:112px!important;transform:translateY(2px)}
+  .brand{max-width:116px;padding-top:4px}
+  .brand-logo{width:112px!important;transform:translateY(4px)}
   .nav{gap:5px}
   .account{flex-basis:62px;width:62px!important;min-width:62px!important}
 }
