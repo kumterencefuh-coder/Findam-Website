@@ -101,5 +101,20 @@ html,body,#root{max-width:100%;overflow-x:hidden}.nav{min-width:0;gap:12px}.bran
 .brand-logo{width:200px!important;height:42px!important;object-fit:cover;object-position:center 52%}
 @media(max-width:580px){.brand-logo{width:150px!important;height:34px!important}}
 
+/* Mobile header: keep the brand, menu and login control visible together. */
+@media(max-width:580px){
+  .nav{display:flex;align-items:center;gap:8px}
+  .brand{flex:0 1 auto;min-width:0;max-width:132px}
+  .brand-logo{width:126px!important;height:40px!important;object-fit:cover!important;object-position:center 52%!important}
+  .menu{display:block;flex:0 0 34px;width:34px;height:38px;padding:0;font-size:24px;line-height:1}
+  .account{flex:0 0 66px;width:66px!important;min-width:66px!important;height:34px}
+}
+@media(max-width:360px){
+  .brand{max-width:116px}
+  .brand-logo{width:112px!important}
+  .nav{gap:5px}
+  .account{flex-basis:62px;width:62px!important;min-width:62px!important}
+}
+
 /* Conversational bot and direct contact details */
 .bot-logo,.floating-bot{display:grid;place-items:center;border-radius:50%;background:#fff;color:#25d366}.bot-logo{width:31px;height:31px;font-size:17px}.floating-bot{width:31px;height:31px;font-size:18px}.bot-chat{display:flex;flex-direction:column;gap:8px;max-height:240px;min-height:128px;overflow:auto}.bot-chat p{margin:0}.bot-chat .user{align-self:flex-end;border-radius:8px 8px 0 8px;background:#dcf8e5;color:#284336}.bot-input{display:flex;gap:8px;padding:10px;border-top:1px solid #eee}.bot-input input{flex:1;min-width:0;padding:9px 11px;border:1px solid #ddd;border-radius:18px;outline:none;font-size:12px}.bot-input input:focus{border-color:#25d366}.bot-input button{width:34px;height:34px;border:0;border-radius:50%;background:#25d366;color:#fff}.bot-contact{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:12px;border-top:1px solid #eee;background:#fafafa}.bot-contact b{grid-column:span 2;color:#444;font-size:11px}.bot-contact a{color:#267c48;font-size:11px;text-decoration:none}.whatsapp{min-width:51px}.whatsapp>span:last-child{font-size:12px;font-weight:700}
