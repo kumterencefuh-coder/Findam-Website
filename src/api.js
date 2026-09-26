@@ -36,6 +36,7 @@ function adminHeaders(token) { return { 'X-Admin-Token': token, Authorization: `
 export function getAdminListings(token) { return request('/admin/listings', { headers: adminHeaders(token) }).then((result) => result.data) }
 export function getAdminUsers(token) { return request('/admin/users', { headers: { Authorization: `Bearer ${token}` } }).then((result) => result.data) }
 export function promoteUser(id, token) { return request(`/admin/users/${id}/promote`, { method: 'POST', headers: { Authorization: `Bearer ${token}` } }).then((result) => result.data) }
+export function verifyUser(id, token) { return request(`/admin/users/${id}/verify`, { method: 'POST', headers: { Authorization: `Bearer ${token}` } }).then((result) => result.data) }
 export function confirmListing(id, token) { return request(`/admin/listings/${id}/confirm`, { method: 'POST', headers: adminHeaders(token) }) }
 export function rejectListing(id, reason, token) { return request(`/admin/listings/${id}/reject`, { method: 'POST', headers: adminHeaders(token), body: JSON.stringify({ reason }) }) }
 export function requestListingInfo(id, reason, token) { return request(`/admin/listings/${id}/needs-info`, { method: 'POST', headers: adminHeaders(token), body: JSON.stringify({ reason }) }) }
