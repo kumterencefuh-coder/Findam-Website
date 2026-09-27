@@ -75,7 +75,7 @@ function App() {
       <nav className={menuOpen ? 'open' : ''}>
         <button className={page === 'home' ? 'active' : ''} onClick={() => go('home')}>Home</button><button onClick={() => chooseType('Rent')}>Rent</button><button onClick={() => chooseType('Guesthouse')}>Guesthouse</button><button onClick={() => go('workflow')}>How it works</button>
       </nav>
-      <button className="primary compact" onClick={() => auth ? go('list') : setShowAuth(true)}>List Your Property</button><button className="account" onClick={() => auth ? go('dashboard') : setShowAuth(true)} aria-label="Account">{auth ? (auth.user.name || 'Account') : 'Log in'}</button>
+      <button className="primary compact" onClick={() => auth ? go('list') : setShowAuth(true)}>List Your Property</button><button className="account" onClick={() => auth ? go(['admin', 'root_admin'].includes(auth.user?.role) ? 'admin' : 'dashboard') : setShowAuth(true)} aria-label="Account">{auth ? (auth.user.name || 'Account') : 'Log in'}</button>
     </div></header>
     <main>
       {page === 'home' && <Home listings={listings} city={city} setCity={setCity} type={type} setType={setType} maxPrice={maxPrice} setMaxPrice={setMaxPrice} search={() => go('listings')} onOpen={showListing} savedIds={savedIds} onSave={toggleSaved} go={go} />}
