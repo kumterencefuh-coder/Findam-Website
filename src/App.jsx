@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { cities, listings as sampleListings } from './data.js'
-import { getFavorites, getListings, removeFavorite, saveFavorite, sendBotMessage, sendInquiry, submitProperty } from './api.js'
+import { getFavorites, getListings, me, removeFavorite, saveFavorite, sendBotMessage, sendInquiry, submitProperty } from './api.js'
 import Auth, { Dashboard } from './components/Auth.jsx'
 import CreateListing from './components/CreateListing.jsx'
 import Admin from './components/Admin.jsx'
@@ -60,6 +60,21 @@ function App() {
   const [showAuth, setShowAuth] = useState(false)
   const login = (result) => { const next = { token: result.token, user: result.data }; localStorage.setItem('findam-auth', JSON.stringify(next)); if (['admin', 'root_admin'].includes(result.data?.role)) localStorage.setItem('findam-admin-token', result.token); else localStorage.removeItem('findam-admin-token'); setAuth(next); setShowAuth(false); go(['admin', 'root_admin'].includes(result.data?.role) ? 'admin' : 'dashboard') }
   const logout = () => { localStorage.removeItem('findam-auth'); localStorage.removeItem('findam-admin-token'); setAuth(null); go('home') }
+  useEffect(() => {
+    const saved = auth
+    if (!saved?.token) return
+    me(saved.token).then((user) => {
+      const next = { token: saved.token, user }
+      localStorage.setItem('findam-auth', JSON.stringify(next))
+      if (['admin', 'root_admin'].includes(user.role)) localStorage.setItem('findam-admin-token', saved.token)
+      else localStorage.removeItem('findam-admin-token')
+      setAuth(next)
+    }).catch(() => {
+      localStorage.removeItem('findam-auth')
+      localStorage.removeItem('findam-admin-token')
+      setAuth(null)
+    })
+  }, [])
   useEffect(() => { Promise.all([getListings().catch(() => sampleListings), getFavorites(visitorId).catch(() => [])]).then(([items, saved]) => { setListings(items); setSavedIds(saved.map((item) => item.id)) }).finally(() => setLoading(false)) }, [visitorId])
   const results = useMemo(() => { const filtered = listings.filter((listing) => (!city || listing.city === city) && (!neighbourhood || listing.neighbourhood === neighbourhood) && (!type || listing.type === type) && (!minPrice || listing.price >= Number(minPrice)) && (!maxPrice || listing.price <= Number(maxPrice)) && (!beds || Number(listing.beds) >= Number(beds)) && (!baths || Number(listing.baths) >= Number(baths)) && `${listing.title} ${listing.city} ${listing.neighbourhood}`.toLowerCase().includes(query.toLowerCase())); return [...filtered].sort((a, b) => sort === 'price-asc' ? a.price - b.price : sort === 'price-desc' ? b.price - a.price : sort === 'newest' ? new Date(b.createdAt || 0) - new Date(a.createdAt || 0) : 0) }, [listings, city, neighbourhood, type, query, minPrice, maxPrice, beds, baths, sort])
   const clearFilters = () => { setCity(''); setNeighbourhood(''); setType(''); setMinPrice(''); setMaxPrice(''); setBeds(''); setBaths(''); setSort(''); setQuery('') }
